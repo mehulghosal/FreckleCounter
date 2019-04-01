@@ -1,5 +1,10 @@
 import cv2
+import dlib
 import numpy as np
+from imutils import face_utils
+from os import getcwd
+
+cwd = getcwd()
 
 # uses haar face detection built into cv2
 # returns rectangle with coordinates of recognized face 
@@ -19,6 +24,26 @@ def display(img):
 	cv2.waitKey(0)
 	cv2.destroyAllWindows()
 
+def B(image):
+	p = cwd + "/data/shape_predictor_68_face_landmarks.dat"
+	gray = img
+	detector = dlib.get_frontal_face_detector()
+	rects = detector(gray, 0)
+	predictor = dlib.shape_predictor(p)
+	
+	for (i, rect) in enumerate(rects):
+		# Make the prediction and transfom it to numpy array
+		shape = predictor(gray, rect)
+		shape = face_utils.shape_to_np(shape)
+    
+        # Draw on our image, all the finded cordinate points (x,y) 
+		for (x, y) in shape:
+			cv2.circle(image, (x, y), 2, (0, 255, 0), -1)
+
+	display(img)
+
+
 if __name__ == '__main__':
-	img = cv2.imread('freckles1.jpg')
-	faceDetect(img)
+	img = cv2.imread(cwd + '/images/control1.jpg', 1)
+	# faceDetect(img)
+	B(img)
