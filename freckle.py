@@ -24,26 +24,36 @@ def display(img):
 	cv2.waitKey(0)
 	cv2.destroyAllWindows()
 
-def B(image):
+def features(image):
 	p = cwd + "/data/shape_predictor_68_face_landmarks.dat"
-	gray = img
 	detector = dlib.get_frontal_face_detector()
-	rects = detector(gray, 0)
+	rects = detector(image, 0)
 	predictor = dlib.shape_predictor(p)
 	
 	for (i, rect) in enumerate(rects):
 		# Make the prediction and transfom it to numpy array
-		shape = predictor(gray, rect)
+		shape = predictor(image, rect)
 		shape = face_utils.shape_to_np(shape)
     
         # Draw on our image, all the finded cordinate points (x,y) 
 		for (x, y) in shape:
 			cv2.circle(image, (x, y), 2, (0, 255, 0), -1)
 
-	display(img)
+	fill(image, shape, 36, 42) #left eye
+	fill(image, shape, 42, 48) #left eye
+	fill(image, shape, 48, 60) #mouth + lips
+	fill(image, shape, 30, 36) #bottom of nose
 
+
+	display(image)
+
+def fill(image, shape, start, end):
+	feature = shape[start:end].reshape((-1,1,2))
+	cv2.fillPoly(image, [feature], (0,255,255))
 
 if __name__ == '__main__':
-	img = cv2.imread(cwd + '/images/control1.jpg', 1)
+	img1 = cv2.imread(cwd + '/images/control1.jpg', 1)
+	img2 = cv2.imread(cwd + '/images/freckles1.jpg', 1)
 	# faceDetect(img)
-	B(img)
+	points1 = features(img1)
+	points2 = features(img2)
