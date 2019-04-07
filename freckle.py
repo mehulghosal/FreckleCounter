@@ -51,6 +51,7 @@ def fill(image, shape, start, end):
 	feature = shape[start:end].reshape((-1,1,2))
 	cv2.fillPoly(image, [feature], (0,255,255))
 
+# not going to use this - im gonna keep it here for future reference on corners
 def corners(image):
 	gray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
 	dst = cv2.cornerHarris(gray,15,21,0.04)
@@ -65,4 +66,4 @@ if __name__ == '__main__':
 	img1 = features(img1)
 
 
-	img2 = corners(features(img2))
+	# img2 = corners(features(img2))
