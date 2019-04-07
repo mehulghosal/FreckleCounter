@@ -19,8 +19,8 @@ def faceDetect(img):
 	return faces_rects
 
 # displays given image
-def display(img):
-	cv2.imshow('image', img)
+def display(img, title = "image"):
+	cv2.imshow(title, img)
 	cv2.waitKey(0)
 	cv2.destroyAllWindows()
 
@@ -43,13 +43,21 @@ def features(image):
 	fill(image, shape, 42, 48) #left eye
 	fill(image, shape, 48, 60) #mouth + lips
 	fill(image, shape, 30, 36) #bottom of nose
+	fill(image, shape, 17, 40, sub=True, end1=22, start2=36) # left eyebrow to eye ???
 
 	# display(image)
 	return image
 
-def fill(image, shape, start, end):
-	feature = shape[start:end].reshape((-1,1,2))
-	cv2.fillPoly(image, [feature], (0,255,255))
+# draws polygon given set number of points [start-1, end]
+# sub is for sublisting and splicing - so if i want to fill in the space between eyebores and eyes
+def fill(image, shape, start, end, sub = False, end1 = 0, start2 = 0):
+	if sub == False:
+		feature = shape[start:end].reshape((-1,1,2))
+		cv2.fillPoly(image, [feature], (0,255,255))
+	else:
+		feature = (shape[start:end1]).reshape((-1,1,2)) + (shape[start2:end]).reshape((-1,1,2))
+		cv2.fillPoly(image, [feature], (0,255,255))
+
 
 # not going to use this - im gonna keep it here for future reference on corners
 def corners(image):
@@ -64,6 +72,6 @@ if __name__ == '__main__':
 	img2 = cv2.imread(cwd + '/images/freckles1.jpg', 1)
 	# faceDetect(img)
 	img1 = features(img1)
-
+	display(img1)
 
 	# img2 = corners(features(img2))
