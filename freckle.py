@@ -44,8 +44,8 @@ def features(image):
 	fill(image, shape, 48, 60) #mouth + lips
 	fill(image, shape, 30, 36) #bottom of nose
 
-
 	display(image)
+	return image
 
 def fill(image, shape, start, end):
 	feature = shape[start:end].reshape((-1,1,2))
@@ -55,5 +55,5 @@ if __name__ == '__main__':
 	img1 = cv2.imread(cwd + '/images/control1.jpg', 1)
 	img2 = cv2.imread(cwd + '/images/freckles1.jpg', 1)
 	# faceDetect(img)
-	points1 = features(img1)
-	points2 = features(img2)
+	img1 = features(img1)
+	img2 = features(img2)
