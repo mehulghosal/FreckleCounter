@@ -24,7 +24,7 @@ def display(img, title = "image"):
 	cv2.waitKey(0)
 	cv2.destroyAllWindows()
 
-def features(image):
+def findFeatures(image):
 	p = cwd + "/data/shape_predictor_68_face_landmarks.dat"
 	detector = dlib.get_frontal_face_detector()
 	rects = detector(image, 0)
@@ -39,25 +39,25 @@ def features(image):
 		for (x, y) in shape:
 			cv2.circle(image, (x, y), 2, (0, 255, 0), -1)
 
-	fill(image, shape, 36, 42) #left eye
-	fill(image, shape, 42, 48) #left eye
+	fill(image, shape, 42, 48) #right eye
 	fill(image, shape, 48, 60) #mouth + lips
 	fill(image, shape, 30, 36) #bottom of nose
-	fill(image, shape, 17, 40, sub=True, end1=22, start2=36) # left eyebrow to eye ???
+	fill(image, shape, 17, 40, sub=True, l = [shape[17], shape[18], shape[19], shape[20],shape[21],shape[39], shape[40], shape[36]]) # left eye
+	fill(image, shape, 17, 40, sub=True, l = [shape[22],shape[23],shape[24], shape[25], shape[26], shape[45], shape[42]]) # left eye
 
 	# display(image)
 	return image
 
 # draws polygon given set number of points [start-1, end]
-# sub is for sublisting and splicing - so if i want to fill in the space between eyebores and eyes
-def fill(image, shape, start, end, sub = False, end1 = 0, start2 = 0):
+# sub is for sublisting and splicing - so if if want to fill in the space between eyebores and eyes
+def fill(image, shape, start, end, sub = False, l = []):
 	if sub == False:
 		feature = shape[start:end].reshape((-1,1,2))
 		cv2.fillPoly(image, [feature], (0,255,255))
 	else:
-		feature = (shape[start:end1]).reshape((-1,1,2)) + (shape[start2:end]).reshape((-1,1,2))
+		feature = np.array(l).reshape((-1,1,2))
 		cv2.fillPoly(image, [feature], (0,255,255))
-
+	return feature
 
 # not going to use this - im gonna keep it here for future reference on corners
 def corners(image):
@@ -71,7 +71,5 @@ if __name__ == '__main__':
 	img1 = cv2.imread(cwd + '/images/control1.jpg', 1)
 	img2 = cv2.imread(cwd + '/images/freckles1.jpg', 1)
 	# faceDetect(img)
-	img1 = features(img1)
+	img1 = findFeatures(img1)
 	display(img1)
-
-	# img2 = corners(features(img2))
